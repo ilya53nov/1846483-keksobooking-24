@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг»
 
 * Студент: [Илья Хицков](https://up.htmlacademy.ru/javascript/24/user/1846483).
-* Наставник: `Неизвестно`.
+* Наставник: [Владислав Кривокора](https://htmlacademy.ru/profile/krivokora).
 
 ---
 
