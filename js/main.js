@@ -44,6 +44,7 @@ const FEATURES = [
   'parking',
   'washer',
   'elevator',
+  'conditioner',
 ];
 
 const DESCRIPTIONS = [
@@ -65,6 +66,8 @@ const PHOTOS = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg',
 ];
 
+const SIMILAR_ADVERTISEMENT_COUNT = 10;
+
 // Функция, возвращающая случайное число из переданного диапазона включительно
 function getRandomFromRange(from, to){
   return Math.random() * (to - from) + from;
@@ -84,28 +87,35 @@ const getRandomFloatFromRange = function(from, to, decimalPlaces){
   }
 };
 
+// Функция, возвращающая случайный элемент массива
+const getRandomArrayElement = (elements) => elements[getRandomIntFromRange(0, elements.length-1)];
+
+// Функции для возвращения случайных координат
+const getLat = () => getRandomFloatFromRange(35.65000, 35.70000, 5);
+const getLng = () => getRandomFloatFromRange(139.70000, 139.80000, 5);
+
+// Функция описания объявления
 const createAdvertisement = () => ({
   author:{
-    avatar: AVATARS.splice(0,1),
-  },
-  location:{
-    lat:  getRandomFloatFromRange(35.65000, 35.70000, 5),
-    lng:  getRandomFloatFromRange(139.70000, 139.80000, 5),
+    avatar: AVATARS.splice(0,1).join(),
   },
   offer:{
-    title: TITLES.splice(0,1),
-    address: `${getRandomFloatFromRange(35.65000, 35.70000, 5)  }, ${  getRandomFloatFromRange(139.70000, 139.80000, 5)}`,
+    title: TITLES.splice(0,1).join(),
+    address: `${getLat()  }, ${  getLng()}`,
     price: getRandomIntFromRange(500, 50000),
-    type: TYPES[getRandomIntFromRange(0,TYPES.length-1)],
+    type: getRandomArrayElement(TYPES),
     rooms: getRandomIntFromRange(1, 4),
     quests: getRandomIntFromRange(1, 10),
-    checkin: HOURS[getRandomIntFromRange(0,HOURS.length-1)],
-    checkout: HOURS[getRandomIntFromRange(0,HOURS.length-1)],
-    features: FEATURES.slice(getRandomIntFromRange(0,FEATURES.length-1),getRandomIntFromRange(0,FEATURES.length-1)) ,
-    description:DESCRIPTIONS.splice(0,1),
-    photos: Array.from({length: getRandomIntFromRange(1,10)},() => PHOTOS[getRandomIntFromRange(0,PHOTOS.length-1)]),
+    checkin: getRandomArrayElement(HOURS),
+    checkout: getRandomArrayElement(HOURS),
+    features: FEATURES.slice(getRandomIntFromRange(1,FEATURES.length-1)) ,
+    description:DESCRIPTIONS.splice(0,1).join(),
+    photos: Array.from({length: getRandomIntFromRange(1,10)},() => getRandomArrayElement(PHOTOS)),
   },
-
+  location:{
+    lat:  getLat(),
+    lng:  getLng(),
+  },
 });
 
-const similarAdvertisements = Array.from({length: 10}, createAdvertisement);
+const similarAdvertisements = Array.from({length: SIMILAR_ADVERTISEMENT_COUNT}, createAdvertisement);
