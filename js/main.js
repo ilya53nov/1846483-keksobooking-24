@@ -1,6 +1,5 @@
-import {createAdvertisement} from './data.js';
+import {advertisementListFragment} from './popup.js';
 
-const SIMILAR_ADVERTISEMENT_COUNT = 10;
+const similarElement = document.querySelector('#map-canvas');
 
-const similarAdvertisements = Array.from({length: SIMILAR_ADVERTISEMENT_COUNT}, createAdvertisement);
-
+similarElement.appendChild(advertisementListFragment.firstChild);
