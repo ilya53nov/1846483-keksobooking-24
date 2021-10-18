@@ -13,8 +13,9 @@ const DECIMAL_PLACES = 5;
 const MAX_ROOMS = 5;
 const MAX_QUESTS = 10;
 const MIN_PRICE = 500;
-const MAX_PRICE = 50000;
+const MAX_PRICE = 5000;
 const MAX_LENGTH = 10;
+const SIMILAR_ADVERTISEMENT_COUNT = 10;
 
 const AVATARS = [
   'img/avatars/user01.png',
@@ -30,16 +31,16 @@ const AVATARS = [
 ];
 
 const TITLES = [
-  '1-к. квартира',
-  '2-к. квартира',
-  '3-к. квартира',
-  '4-к. квартира',
-  '5-к. квартира',
-  'Дом 100 кв. м.',
-  'Дом 150 кв. м.',
-  'Дом 200 кв. м.',
-  'Дом 250 кв. м.',
-  'Дом 300 кв. м.',
+  'Ограниченное предложение',
+  'Только сегодня',
+  'Для спокойного отдыха',
+  'Отличный вариант для молодожён',
+  'Лучшее предложение для туристов',
+  'Хостел',
+  'Тихое место в 5-ти минутах от метро',
+  'Уютное гнёздышко',
+  'Агенство BestOfTheBest',
+  'Агенство Friends',
 ];
 
 const TYPES = [
@@ -66,16 +67,16 @@ const FEATURES = [
 ];
 
 const DESCRIPTIONS = [
-  'Лучшее предложение в центре города с 2 раздельными спальными местами или для 1 пары! Имеется свободное парковочное место во дворе дома',
-  'Лучшее предложение в центре города с 6 раздельными спальными местами или для 3 пар! Каждому гостю 2 полотенца: Для душа, для рук и лица.',
-  'Новый ремонт, выглаженное постельное белье и полотенца! Рядом продуктовые магазины, кафе, рестораны, бары, кинотеатр, ТЦ, остановки общественного транспорта.',
-  'От собственника в новом доме в центре города. Есть возможность курения, но только на балконе с закрытой дверью.',
-  'Тепло и уютно. Предоставляем постельное белье и махровые полотенца. Одноразовые мыло, шампунь, гели и тапочки уже входят в стоимость проживания.',
-  'Для гостей нашего города предлагаем замечательный вариант. Квартира в новом доме, улучшенной планировки, спокойные соседи, лифт, окна с видом на реку.',
-  'Если вы любите чистоту и комфорт - вам сюда. Всегда свежее постельное белье и полотенца.',
-  'Дизайнерский ремонт, чистая, аккуратная, уютная и солнечная. ОГРОМНАЯ ВАННА - джакузи.',
-  'Сдается в тихом центре, в новом многоэтажном комплексе состоящем из 5 домов расположенном в 5 минутах езды на машине от центра города.',
-  'Евроремонт, современная система вентиляции, двуспальная кровать. Окна во двор, на окнах установлены москитные сетки.',
+  'Печеньки каждому гостю!',
+  'Тихий район',
+  'Новый ремонт',
+  'Магазины в шаговой доступности',
+  'Красивый вид из окна',
+  'Отличный вариант для туристов',
+  'Своя парковка',
+  'Дизайнерский ремонт',
+  'Дружелюбные соседи',
+  'Есть всё необходимое',
 ];
 
 const PHOTOS = [
@@ -90,10 +91,10 @@ const createAdvertisement = () => {
   const lng = getRandomFloatFromRange(MIN_LNG, MAX_LNG, DECIMAL_PLACES);
   return {
     author:{
-      avatar: AVATARS.splice(0,1).join(),
+      avatar: AVATARS.splice(getRandomPositiveInt(AVATARS.length-1),1).join(),
     },
     offer:{
-      title: TITLES.splice(0,1).join(),
+      title: TITLES.splice(getRandomPositiveInt(TITLES.length-1),1).join(),
       address: `${lat  }, ${  lng}`,
       price: getRandomIntFromRange(MIN_PRICE, MAX_PRICE),
       type: getRandomArrayElement(TYPES),
@@ -102,7 +103,7 @@ const createAdvertisement = () => {
       checkin: getRandomArrayElement(HOURS),
       checkout: getRandomArrayElement(HOURS),
       features: FEATURES.slice(getRandomPositiveInt(FEATURES.length-1)) ,
-      description: DESCRIPTIONS.splice(0,1).join(),
+      description: DESCRIPTIONS.splice(getRandomPositiveInt(DESCRIPTIONS.length-1),1).join(),
       photos: Array.from({length: getRandomPositiveInt(MAX_LENGTH)},() => getRandomArrayElement(PHOTOS)),
     },
     location:{
@@ -112,4 +113,6 @@ const createAdvertisement = () => {
   };
 };
 
-export {createAdvertisement};
+const createAdvertisements = () => Array.from({length: SIMILAR_ADVERTISEMENT_COUNT}, createAdvertisement);
+
+export {createAdvertisements};
