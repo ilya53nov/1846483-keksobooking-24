@@ -1,8 +1,6 @@
 import {createAdvertisements} from './data.js';
 import {declension} from './util.js';
 
-const checkValueAndAddTextContentOrClass = (element, value) => (value) ? element.textContent = value : element.classList.add('hidden)');
-
 const TYPES = {
   flat: 'Квартира',
   bungalow: 'Бунгало',
@@ -10,6 +8,8 @@ const TYPES = {
   palace: 'Дворец',
   hotel: 'Отель',
 };
+
+const checkValueAndAddTextContentOrClass = (element, value) => (value) ? element.textContent = value : element.classList.add('hidden)');
 
 const similarAdvertisementTemlate = document.querySelector('#card')
   .content
@@ -34,15 +34,13 @@ similarAdvertisements.forEach(({offer, author}) => {
   advertisementElement.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
 
   const featuresContainer = advertisementElement.querySelector('.popup__features');
-  const featuresList = featuresContainer.querySelectorAll('.popup__feature');
+  featuresContainer.innerHTML = '';
 
-  featuresList.forEach((featuresListItem) => {
-    const isNecessary = offer.features.some(
-      (featuresItem) => featuresListItem.classList.contains(`popup__feature--${featuresItem}`),
-    );
-    if(!isNecessary){
-      featuresListItem.remove();
-    }
+  offer.features.forEach((element) => {
+    const createElementFeatures = document.createElement('li');
+    createElementFeatures.classList.add('popup__feature');
+    createElementFeatures.classList.add(`popup__feature--${element}`);
+    featuresContainer.appendChild(createElementFeatures);
   });
 
   checkValueAndAddTextContentOrClass(advertisementElement.querySelector('.popup__description'), offer.description);
