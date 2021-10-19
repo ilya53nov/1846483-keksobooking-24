@@ -20,8 +20,6 @@ const switchFormState = (isDisabled, ...forms) => {
 
 const disableForms = () => switchFormState(true, formAdInformation, formFilters);
 
-export{disableForms};
-
 const activateForms = () => switchFormState(false, formAdInformation, formFilters);
 
-export{activateForms};
+export{activateForms, disableForms};
