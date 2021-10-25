@@ -7,10 +7,9 @@ const switchFormState = (isDisabled, ...forms) => {
     const classNameForm = form.className;
     form.classList.remove(classNameForm);
 
-    if(isDisabled){
+    if (isDisabled) {
       form.classList.add(`${classNameForm}--disabled`);
-    }
-    else{
+    } else {
       form.classList.add(classNameForm.replace('--disabled',''));
     }
 
