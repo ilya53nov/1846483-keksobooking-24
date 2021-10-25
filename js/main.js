@@ -1,4 +1,4 @@
-import {advertisementListFragment} from './popup.js';
+import {renderSimilarList} from './similar-list.js';
 import {activateForms, disableForms} from './form.js';
 import './form-validation.js';
 
@@ -6,4 +6,4 @@ import './form-validation.js';
 
 const similarElement = document.querySelector('#map-canvas');
 
-similarElement.appendChild(advertisementListFragment.firstChild);
+similarElement.appendChild(renderSimilarList.firstChild);
