@@ -1,5 +1,5 @@
 import {createAdvertisements} from './data.js';
-import {declension} from './util.js';
+import {getDeclension} from './util.js';
 
 const HIDDEN_CLASS = 'hidden';
 
@@ -12,10 +12,9 @@ const TYPES = {
 };
 
 const checkValueAndAddTextContentOrClassHidden = (element, checkValue, insertValue) => {
-  if(checkValue){
+  if (checkValue) {
     element.textContent = insertValue;
-  }
-  else{
+  } else {
     element.classList.add(HIDDEN_CLASS);
   }
 };
@@ -37,26 +36,24 @@ similarAdvertisements.forEach(({offer, author}) => {
   checkValueAndAddTextContentOrClassHidden(advertisementElement.querySelector('.popup__text--time'), offer.checkin && offer.checkout, `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`);
   checkValueAndAddTextContentOrClassHidden(advertisementElement.querySelector('.popup__description'), offer.description, offer.description);
 
-  if(offer.price){
+  if (offer.price) {
     advertisementElement.querySelector('.popup__text--price').textContent = offer.price;
     const spanElement = document.createElement('span');
     spanElement.textContent = ' ₽/ночь';
     advertisementElement.querySelector('.popup__text--price').appendChild(spanElement);
-  }
-  else{
+  } else {
     advertisementElement.querySelector('.popup__text--price').classList.add(HIDDEN_CLASS);
   }
 
-  if (offer.rooms && offer.quests){
-    const rooms = declension(['комната', 'комнаты', 'комнат'], offer.rooms);
-    const quests = declension(['гостя', 'гостей', 'гостей'], offer.quests);
+  if (offer.rooms && offer.quests) {
+    const rooms = getDeclension(['комната', 'комнаты', 'комнат'], offer.rooms);
+    const quests = getDeclension(['гостя', 'гостей', 'гостей'], offer.quests);
     advertisementElement.querySelector('.popup__text--capacity').textContent = `${rooms} для ${quests}`;
-  }
-  else{
+  } else {
     advertisementElement.querySelector('.popup__text--capacity').classList.add(HIDDEN_CLASS);
   }
 
-  if (offer.features){
+  if (offer.features) {
     const featuresContainer = advertisementElement.querySelector('.popup__features');
     featuresContainer.innerHTML = '';
 
@@ -66,12 +63,11 @@ similarAdvertisements.forEach(({offer, author}) => {
       createElementFeatures.classList.add(`popup__feature--${element}`);
       featuresContainer.appendChild(createElementFeatures);
     });
-  }
-  else{
+  } else {
     advertisementElement.querySelector('.popup__features').classList.add(HIDDEN_CLASS);
   }
 
-  if(offer.photos){
+  if (offer.photos) {
     const photoContainer = advertisementElement.querySelector('.popup__photos');
     const photoListFragment = document.createDocumentFragment();
 
@@ -83,19 +79,19 @@ similarAdvertisements.forEach(({offer, author}) => {
 
     photoContainer.innerHTML ='';
     photoContainer.appendChild(photoListFragment);
-  }
-  else{
+  } else {
     advertisementElement.querySelector('.popup__photos').classList.add(HIDDEN_CLASS);
   }
 
-  if(author.avatar){
+  if (author.avatar) {
     advertisementElement.querySelector('.popup__avatar').src = author.avatar;
-  }
-  else{
+  } else {
     advertisementElement.querySelector('.popup__avatar').classList.add(HIDDEN_CLASS);
   }
 
   advertisementListFragment.appendChild(advertisementElement);
 });
 
-export {advertisementListFragment};
+const renderSimilarList = advertisementListFragment;
+
+export {renderSimilarList};
