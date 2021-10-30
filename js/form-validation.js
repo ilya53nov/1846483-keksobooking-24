@@ -28,14 +28,21 @@ const priceInput = document.querySelector('#price');
 const typeInput = document.querySelector('#type');
 
 const rulesMinPrice = {
-  'Бунгало' : 0,
-  'Квартира' : 1000,
-  'Отель' : 3000,
-  'Дом' : 5000,
-  'Дворец' : 10000,
+  'bungalow' : 0,
+  'flat' : 1000,
+  'hotel' : 3000,
+  'house' : 5000,
+  'palace' : 10000,
 };
 
-const getMinPrice = () => rulesMinPrice[typeInput.selectedOptions[0].text];
+const getMinPrice = () => rulesMinPrice[typeInput.value];
+
+const setMinValuePriceInput = () => {
+  priceInput.min = getMinPrice();
+  priceInput.placeholder = getMinPrice();
+};
+
+setMinValuePriceInput();
 
 const onPriceInputChange = () => {
   const value = priceInput.value;
@@ -52,8 +59,7 @@ const onPriceInputChange = () => {
 };
 
 const onTypeInputChange = () => {
-  priceInput.min = getMinPrice();
-  priceInput.placeholder = getMinPrice();
+  setMinValuePriceInput();
   onPriceInputChange();
 };
 
@@ -65,18 +71,18 @@ priceInput.addEventListener('input', onPriceInputChange);
 const roomInput = document.querySelector('#room_number');
 const capacityInput = document.querySelector('#capacity');
 
-const rulesCapacityInput = {
-  '1 комната': ['для 1 гостя'],
-  '2 комнаты': ['для 1 гостя', 'для 2 гостей'],
-  '3 комнаты': ['для 1 гостя', 'для 2 гостей', 'для 3 гостей'],
-  '100 комнат': ['не для гостей'],
-};
+const rulesCapacityInput = new Map ([
+  ['1 комната', ['для 1 гостя']],
+  ['2 комнаты', ['для 1 гостя', 'для 2 гостей']],
+  ['3 комнаты', ['для 1 гостя', 'для 2 гостей', 'для 3 гостей']],
+  ['100 комнат', ['не для гостей']],
+]);
 
-const isValidCapacityInput = () => rulesCapacityInput[roomInput.selectedOptions[0].text].some((element) => element === capacityInput.selectedOptions[0].text);
+const isValidCapacityInput = () => rulesCapacityInput.get(roomInput.selectedOptions[0].text).some((element) => element === capacityInput.selectedOptions[0].text);
 
-const createMessageCustomValidity = () => `Не верно указано количество мест, необходимо выбрать: ${rulesCapacityInput[roomInput.selectedOptions[0].text].join(' или ')}.`;
+const createMessageCustomValidity = () => `Не верно указано количество мест, необходимо выбрать: ${rulesCapacityInput.get(roomInput.selectedOptions[0].text).join(' или ')}.`;
 
-const onOptionChange = () => {
+const onCapacityInputChange = () => {
   if (!isValidCapacityInput()) {
     capacityInput.setCustomValidity(createMessageCustomValidity());
   } else {
@@ -86,8 +92,8 @@ const onOptionChange = () => {
   capacityInput.reportValidity();
 };
 
-capacityInput.addEventListener('change', onOptionChange);
-roomInput.addEventListener('change', onOptionChange);
+capacityInput.addEventListener('change', onCapacityInputChange);
+roomInput.addEventListener('change', onCapacityInputChange);
 
 // Валидация полей "Время заезда", "Время выезда"
 const timeInInput = document.querySelector('#timein');
@@ -113,12 +119,12 @@ imagesInput.accept = 'image/*';
 const form = document.querySelector('.ad-form');
 
 form.addEventListener('submit', (evt) => {
-  //Добавление временного значения в поле адрес (для успешной отправки формы)
-  addressInput.value = '55.55';
 
   if (!isValidCapacityInput()) {
-    onOptionChange();
+    onCapacityInputChange();
     evt.preventDefault();
     return false;
   }
 });
+
+export {addressInput};

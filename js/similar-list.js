@@ -1,4 +1,3 @@
-import {createAdvertisements} from './data.js';
 import {getDeclension} from './util.js';
 
 const HIDDEN_CLASS = 'hidden';
@@ -23,11 +22,7 @@ const similarAdvertisementTemlate = document.querySelector('#card')
   .content
   .querySelector('.popup');
 
-const similarAdvertisements = createAdvertisements();
-
-const advertisementListFragment = document.createDocumentFragment();
-
-similarAdvertisements.forEach(({offer, author}) => {
+const renderSimilarAdvertisement = (({offer, author}) => {
   const advertisementElement = similarAdvertisementTemlate.cloneNode(true);
 
   checkValueAndAddTextContentOrClassHidden(advertisementElement.querySelector('.popup__title'), offer.title, offer.title);
@@ -89,9 +84,7 @@ similarAdvertisements.forEach(({offer, author}) => {
     advertisementElement.querySelector('.popup__avatar').classList.add(HIDDEN_CLASS);
   }
 
-  advertisementListFragment.appendChild(advertisementElement);
+  return advertisementElement;
 });
 
-const renderSimilarList = advertisementListFragment;
-
-export {renderSimilarList};
+export {renderSimilarAdvertisement};
