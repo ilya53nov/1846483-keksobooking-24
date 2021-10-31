@@ -71,16 +71,16 @@ priceInput.addEventListener('input', onPriceInputChange);
 const roomInput = document.querySelector('#room_number');
 const capacityInput = document.querySelector('#capacity');
 
-const rulesCapacityInput = new Map ([
-  ['1 комната', ['для 1 гостя']],
-  ['2 комнаты', ['для 1 гостя', 'для 2 гостей']],
-  ['3 комнаты', ['для 1 гостя', 'для 2 гостей', 'для 3 гостей']],
-  ['100 комнат', ['не для гостей']],
-]);
+const rulesCapacityInput = {
+  '1': ['для 1 гостя'],
+  '2': ['для 1 гостя', 'для 2 гостей'],
+  '3': ['для 1 гостя', 'для 2 гостей', 'для 3 гостей'],
+  '100': ['не для гостей'],
+};
 
-const isValidCapacityInput = () => rulesCapacityInput.get(roomInput.selectedOptions[0].text).some((element) => element === capacityInput.selectedOptions[0].text);
+const isValidCapacityInput = () => rulesCapacityInput[roomInput.value].some((element) => element === capacityInput.selectedOptions[0].text);
 
-const createMessageCustomValidity = () => `Не верно указано количество мест, необходимо выбрать: ${rulesCapacityInput.get(roomInput.selectedOptions[0].text).join(' или ')}.`;
+const createMessageCustomValidity = () => `Не верно указано количество мест, необходимо выбрать: ${rulesCapacityInput[roomInput.value].join(' или ')}.`;
 
 const onCapacityInputChange = () => {
   if (!isValidCapacityInput()) {
@@ -91,6 +91,8 @@ const onCapacityInputChange = () => {
 
   capacityInput.reportValidity();
 };
+
+onCapacityInputChange();
 
 capacityInput.addEventListener('change', onCapacityInputChange);
 roomInput.addEventListener('change', onCapacityInputChange);
@@ -116,15 +118,16 @@ avatarInput.accept = 'image/*';
 const imagesInput = document.querySelector('#images');
 imagesInput.accept = 'image/*';
 
-const form = document.querySelector('.ad-form');
+const descriptionInput = document.querySelector('#description');
 
-form.addEventListener('submit', (evt) => {
+const clearForm = () => {
+  titleInput.value = '';
+  addressInput.value = '';
+  priceInput.value = '';
+  descriptionInput.value = '';
 
-  if (!isValidCapacityInput()) {
-    onCapacityInputChange();
-    evt.preventDefault();
-    return false;
-  }
-});
+  const featuresCheckbox = document.querySelectorAll('.features__checkbox');
+  featuresCheckbox.forEach((element) => element.checked = false);
+};
 
-export {addressInput};
+export {addressInput, onCapacityInputChange, clearForm};

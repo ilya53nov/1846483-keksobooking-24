@@ -1,6 +1,12 @@
-const formAdInformation = document.querySelector('.ad-form');
+import { map, mainMarker, coordinateTokyo } from './map.js';
+import { sendData } from './api.js';
+import { showMessage } from './user-modal.js';
+import { clearForm } from './user-form.js';
 
-const formFilters = document.querySelector('.map__filters');
+const advertisementForm = document.querySelector('.ad-form');
+//const resetButton = advertisementForm.querySelector('.ad-form__reset');
+
+const filtersForm = document.querySelector('.map__filters');
 
 const switchFormState = (isDisabled, ...forms) => {
   forms.forEach((form) => {
@@ -17,8 +23,39 @@ const switchFormState = (isDisabled, ...forms) => {
   });
 };
 
-const disableForms = () => switchFormState(true, formAdInformation, formFilters);
+const disableForms = () => switchFormState(true, advertisementForm, filtersForm);
 
-const activateForms = () => switchFormState(false, formAdInformation, formFilters);
+const activateForms = (...forms) => switchFormState(false, ...forms);
 
-export{activateForms, disableForms};
+const addressInput = document.querySelector('#address');
+
+const setAddressInput = () => {
+  addressInput.value = `${coordinateTokyo.lat}, ${coordinateTokyo.lng}`;
+};
+
+const initialStateForm = () => {
+  clearForm();
+  filtersForm.reset();
+  mainMarker.setLatLng(coordinateTokyo);
+  map.closePopup();
+  setAddressInput();
+};
+
+advertisementForm.addEventListener('reset', (evt) => {
+  evt.preventDefault();
+  initialStateForm();
+});
+
+advertisementForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  sendData(
+    () => {
+      showMessage(true);
+      initialStateForm();
+    },
+    () => showMessage(false),
+    new FormData(evt.target) ,
+  );
+});
+
+export{activateForms, disableForms, advertisementForm, filtersForm};
