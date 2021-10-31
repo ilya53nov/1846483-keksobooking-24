@@ -1,29 +1,29 @@
-// Функция, возвращающая случайное число из переданного диапазона включительно
-const getRandomFromRange = (from, to) => {
-  const minValue = Math.min(Math.abs(from), Math.abs(to));
-  const maxValue = Math.max(Math.abs(from), Math.abs(to));
-  return Math.random() * (maxValue - minValue) + minValue;
+const ALERT_SHOW_TIME = 5000;
+
+// Функция для показа сообщения с ошибкой
+const showAlert = (message) => {
+  const alertContainer = document.createElement('div');
+  alertContainer.style.zIndex = 100;
+  alertContainer.style.position = 'absolute';
+  alertContainer.style.left = 0;
+  alertContainer.style.top = 0;
+  alertContainer.style.right = 0;
+  alertContainer.style.padding = '10px 3px';
+  alertContainer.style.fontSize = '30px';
+  alertContainer.style.textAlign = 'center';
+  alertContainer.style.backgroundColor = 'red';
+
+  alertContainer.textContent = message;
+
+  document.body.append(alertContainer);
+
+  setTimeout(() => {
+    alertContainer.remove();
+  }, ALERT_SHOW_TIME);
 };
 
-// Функция, возвращающая случайное целое число из переданного диапазона включительно
-const getRandomIntFromRange = (from, to) => Math.round(getRandomFromRange(from, to));
-
-export {getRandomIntFromRange};
-
-// Функция, возвращающая случайное число с плавающей точкой из переданного диапазона включительно
-const getRandomFloatFromRange = (from, to, decimalPlaces = 5) => +getRandomFromRange(from, to).toFixed(decimalPlaces);
-
-export {getRandomFloatFromRange};
-
-// Функция, возвращающая положительное случайное целое число из переданного максимального значения включительно
-const getRandomPositiveInt = (maxValue) => getRandomIntFromRange(1, maxValue);
-
-export {getRandomPositiveInt};
-
-// Функция, возвращающая случайный элемент массива
-const getRandomArrayElement = (elements) => elements[getRandomIntFromRange(0, elements.length-1)];
-
-export {getRandomArrayElement};
+// Функция проверки нажатой клавиши, возвращает true, если нажата клавиша Esc
+const isEscapeKey = (evt) => evt.key === 'Escape';
 
 // Функция склонения слов https://jsfiddle.net/jp6chsa2/
 const getDeclension = (forms, val) => {
@@ -31,4 +31,4 @@ const getDeclension = (forms, val) => {
   return `${val}  ${forms[(val % 100 > 4 && val % 100 < 20) ? 2 : cases[(val % 10 < 5) ? val % 10 : 5]]}`;
 };
 
-export {getDeclension};
+export {showAlert, isEscapeKey, getDeclension};
