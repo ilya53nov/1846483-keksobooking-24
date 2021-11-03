@@ -40,10 +40,10 @@ const renderSimilarAdvertisement = (({offer, author}) => {
     advertisementElement.querySelector('.popup__text--price').classList.add(HIDDEN_CLASS);
   }
 
-  if (offer.rooms && offer.quests) {
+  if (offer.rooms && offer.guests) {
     const rooms = getDeclension(['комната', 'комнаты', 'комнат'], offer.rooms);
-    const quests = getDeclension(['гостя', 'гостей', 'гостей'], offer.quests);
-    advertisementElement.querySelector('.popup__text--capacity').textContent = `${rooms} для ${quests}`;
+    const guests = getDeclension(['гостя', 'гостей', 'гостей'], offer.guests);
+    advertisementElement.querySelector('.popup__text--capacity').textContent = `${rooms} для ${guests}`;
   } else {
     advertisementElement.querySelector('.popup__text--capacity').classList.add(HIDDEN_CLASS);
   }
