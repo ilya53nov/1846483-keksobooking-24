@@ -13,10 +13,12 @@ const successMessage = successMessageTemlate.cloneNode(true);
 const errorMessage = errorMessageTemlate.cloneNode(true);
 const errorButton = errorMessage.querySelector('.error__button');
 
+// Событие при клике
 const onMessageClick = () =>{
   closeMessage();
 };
 
+// Событие при нажатой клавише Esc
 const onPopupEscKeyDown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
@@ -24,6 +26,7 @@ const onPopupEscKeyDown = (evt) => {
   }
 };
 
+// Функция скрытия сообщения
 function closeMessage () {
   if (document.body.lastChild === errorMessage) {
     errorMessage.remove();
@@ -35,6 +38,7 @@ function closeMessage () {
   document.removeEventListener('click', onMessageClick);
 }
 
+// Функция показа сообщения, принимает булево значение
 const showMessage = (isSuccess) => {
   if (isSuccess) {
     document.body.appendChild(successMessage);

@@ -1,16 +1,21 @@
-import { activateForms, advertisementForm, filtersForm } from './form.js';
+import { activateForms, advertisementForm, filtersForm, setFilterChange, setFormResetClick, setFormSubmit } from './form.js';
 import { renderSimilarAdvertisement } from './similar-list.js';
 import { getData } from './api.js';
 import { showAlert } from './util.js';
 import { addressInput } from './user-form.js';
+import { filterMapMarkers } from './map-filter.js';
+import { debounce } from './utils/debounce.js';
 
 const coordinateTokyo = {
-  lat: 35.68950,
-  lng: 139.69200,
+  lat: '35.68950',
+  lng: '139.69200',
 };
 
 const mapCanvas = document.querySelector('#map-canvas');
+const filtersContainer = document.querySelector('.map__filters');
 const map = L.map(mapCanvas);
+
+const layerGroup = L.layerGroup();
 
 const mainPinIcon = L.icon({
   iconUrl: './img/main-pin.svg',
@@ -31,8 +36,9 @@ const setValueAddressInput = (evt) => {
 };
 
 const createMarker = (element) => {
+
   const marker = L.marker(element.location, icon)
-    .addTo(map)
+    .addTo(layerGroup)
     .bindPopup(renderSimilarAdvertisement(element))
     .on('click', () => marker.openPopup());
 };
@@ -44,14 +50,44 @@ const mainMarker = L.marker(coordinateTokyo,
   },
 );
 
+const getValueCheckboxFeatures = () => {
+  const housingFeatures = filtersContainer.querySelectorAll('.map__checkbox');
+  const features = [];
+
+  housingFeatures.forEach((element) => {
+    if (element.checked) {
+      features.push(element.value);
+    }
+  });
+  return features;
+};
+
 const renderMarkers = (elements) => {
-  elements.forEach((element) => createMarker(element));
+  const housingType = filtersContainer.querySelector('#housing-type');
+  const housingPrice = filtersContainer.querySelector('#housing-price');
+  const housingRooms = filtersContainer.querySelector('#housing-rooms');
+  const housingGuests = filtersContainer.querySelector('#housing-guests');
+
+  layerGroup.clearLayers();
+
+  filterMapMarkers(elements, housingType.value, housingPrice.value, housingRooms.value, housingGuests.value, getValueCheckboxFeatures());
+
   activateForms(filtersForm);
 };
 
 const onMapLoad = () => {
   activateForms(advertisementForm);
-  getData(renderMarkers, showAlert);
+
+  getData((items) => {
+    renderMarkers(items),
+    setFormSubmit( () => renderMarkers(items)),
+    setFormResetClick( () => renderMarkers(items)),
+    setFilterChange(debounce( () => renderMarkers(items)));
+  }, (err) => {
+    showAlert(err),
+    setFormSubmit(() => false);
+  },
+  );
 };
 
 const createMap = () => {
@@ -59,7 +95,7 @@ const createMap = () => {
     .on('load', () => {
       onMapLoad();
     })
-    .setView(coordinateTokyo, 10);
+    .setView(coordinateTokyo, 12);
 
   L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -68,9 +104,12 @@ const createMap = () => {
     },
   ).addTo(map);
 
+  layerGroup.addTo(map);
+
   mainMarker.addTo(map);
   mainMarker.on('move', setValueAddressInput);
+
   addressInput.value = `${coordinateTokyo.lat}, ${coordinateTokyo.lng}`;
 };
 
-export {map, mainMarker, coordinateTokyo, createMap};
+export {map, mainMarker, coordinateTokyo, createMap, createMarker, onMapLoad };

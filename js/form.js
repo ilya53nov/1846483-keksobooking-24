@@ -1,13 +1,11 @@
 import { map, mainMarker, coordinateTokyo } from './map.js';
 import { sendData } from './api.js';
 import { showMessage } from './user-modal.js';
-import { clearForm } from './user-form.js';
 
 const advertisementForm = document.querySelector('.ad-form');
-//const resetButton = advertisementForm.querySelector('.ad-form__reset');
-
 const filtersForm = document.querySelector('.map__filters');
 
+// Функция смены состояния форм (активация, деактивация)
 const switchFormState = (isDisabled, ...forms) => {
   forms.forEach((form) => {
     const classNameForm = form.className;
@@ -23,39 +21,53 @@ const switchFormState = (isDisabled, ...forms) => {
   });
 };
 
+// Функция деактивация форм
 const disableForms = () => switchFormState(true, advertisementForm, filtersForm);
 
+// Функция активация форм
 const activateForms = (...forms) => switchFormState(false, ...forms);
 
-const addressInput = document.querySelector('#address');
-
-const setAddressInput = () => {
-  addressInput.value = `${coordinateTokyo.lat}, ${coordinateTokyo.lng}`;
-};
-
+// Функция возвращения страницы в начальное состояние
 const initialStateForm = () => {
-  clearForm();
+  advertisementForm.reset();
   filtersForm.reset();
   mainMarker.setLatLng(coordinateTokyo);
   map.closePopup();
-  setAddressInput();
 };
 
-advertisementForm.addEventListener('reset', (evt) => {
-  evt.preventDefault();
-  initialStateForm();
-});
+// Функция установки параметров для формы при нажатии на кнопку reset(очистки формы)
+const setFormResetClick = (callback) => {
+  const resetButton = advertisementForm.querySelector('.ad-form__reset');
+  resetButton.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    initialStateForm();
+    callback();
+  });
+};
 
-advertisementForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  sendData(
-    () => {
-      showMessage(true);
-      initialStateForm();
-    },
-    () => showMessage(false),
-    new FormData(evt.target) ,
-  );
-});
+// Функция установки параметров для отправки формы на сервер
+const setFormSubmit = (callback) => {
+  advertisementForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
 
-export{activateForms, disableForms, advertisementForm, filtersForm};
+    sendData(
+      () => {
+        showMessage(true);
+        initialStateForm();
+        callback();
+      },
+      () => showMessage(false),
+      new FormData(evt.target) ,
+    );
+  });
+};
+
+// Функция установки параметров при фильтрации формы
+const setFilterChange = (callback) => {
+  const filtersContainer = document.querySelector('.map__filters');
+  filtersContainer.addEventListener('change', () => {
+    callback();
+  });
+};
+
+export{activateForms, disableForms, advertisementForm, filtersForm, setFilterChange, setFormResetClick, setFormSubmit};
