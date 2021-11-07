@@ -74,8 +74,6 @@ const filterMapMarkers = (elements, typeValue, priceValue, roomsValue, guestsVal
 
   elements = elements.slice(0, ADS_COUNT);
   elements.forEach((element) => createMarker(element));
-
-  return elements;
 };
 
 export {filterMapMarkers};
