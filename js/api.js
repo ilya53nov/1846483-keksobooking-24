@@ -6,6 +6,7 @@ const getData = (onSuccess, onFail) => {
     .then((response) => {
       if (response.ok) {
         response.json()
+          //.then((advertisements) => onSuccess(advertisements));
           .then((advertisements) => onSuccess(advertisements));
       } else {
         throw new Error('Ошибка. Не удалось загрузить данные с сервера');
@@ -29,9 +30,7 @@ const sendData = (onSuccess, onFail, body) => {
         throw new Error();
       }
     })
-    .catch(() => {
-      onFail();
-    });
+    .catch(() => onFail());
 };
 
 export {getData, sendData};
