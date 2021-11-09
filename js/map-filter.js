@@ -3,7 +3,7 @@ const ADS_COUNT = 10;
 
 const rulesPriceFilter = {
   'middle' : {
-    'min' :  10000,
+    'min' : 10000,
     'max' : 50000,
   },
   'low' : {
@@ -16,64 +16,43 @@ const rulesPriceFilter = {
   },
 };
 
-const filterPrice = (elements, priceValue) => {
-  const isFilterPrice = (value) => (value >= rulesPriceFilter[priceValue].min && value <= rulesPriceFilter[priceValue].max);
-
-  return elements.filter((element) => isFilterPrice(element.offer.price));
-};
-
-const filterType = (elements, typeValue) => elements.filter((element) => {
-  if (element.offer.type) {
-    return element.offer.type === typeValue;
-  }
-});
-
-const filterRooms = (elements, roomsValue) => elements.filter((element) => {
-  if (element.offer.rooms) {
-    return element.offer.rooms === +roomsValue;
-  }
-});
-
-const filterGuests = (elements, guestsValue) => elements.filter((element) => {
-  if (element.offer.guests) {
-    return element.offer.guests === +guestsValue;
-  }
-});
-
-const filterFeatures = (elements, features) => elements.filter((element) => {
-  if (element.offer.features) {
-    return features.every((feature) => element.offer.features.some((featureValue) => feature === featureValue));
-  }
-  return false;
-});
-
-const sortFeature = (elements) => {
-  elements.sort((current, next) => next.offer.features.length - current.offer.features.length);
-};
-
 const isAny = (value) => value === 'any';
 
-const filterMapMarkers = (elements, typeValue, priceValue, roomsValue, guestsValue, features) => {
-  if (!isAny(typeValue)) {
-    elements = filterType(elements, typeValue);
-  }
-  if (!isAny(priceValue)) {
-    elements = filterPrice(elements, priceValue);
-  }
-  if (!isAny(roomsValue)) {
-    elements = filterRooms(elements, roomsValue);
-  }
-  if (!isAny(guestsValue)) {
-    elements = filterGuests(elements, guestsValue);
-  }
-  if (features) {
-    elements = filterFeatures(elements, features);
-  }
+const isFilterPrice = (value, priceFilter) => isAny(priceFilter) || value >= rulesPriceFilter[priceFilter].min && value <= rulesPriceFilter[priceFilter].max;
 
+const isEqualElementToValue = (element, value) => isAny(value) || element.toString() === value.toString();
+
+const isFilterFeatures = (features, filterFeatures) => features && filterFeatures.every((feature) => features.some((featureValue) => feature === featureValue));
+
+const sortFeature = (elements) => {
+  elements.sort((current, next) => {
+    let currentValue = 0;
+    let nextValue = 0;
+
+    if (current.offer.features) {
+      currentValue = current.offer.features.length;
+    }
+    if (next.offer.features) {
+      nextValue = next.offer.features.length;
+    }
+    return nextValue - currentValue;
+  });
+};
+
+const filterMapMarkers = (elements, typeValue, priceValue, roomsValue, guestsValue, features) => {
   sortFeature(elements);
 
-  elements = elements.slice(0, ADS_COUNT);
-  elements.forEach((element) => createMarker(element));
+  const filteredElements = [];
+
+  for (let i = 0; i < elements.length; i++) {
+    if (filteredElements.length === ADS_COUNT) {
+      break;
+    } else if (isEqualElementToValue(elements[i].offer.type, typeValue) && isFilterPrice(elements[i].offer.price, priceValue) && isEqualElementToValue(elements[i].offer.rooms, roomsValue) && isEqualElementToValue(elements[i].offer.guests, guestsValue) && isFilterFeatures(elements[i].offer.features, features)) {
+      filteredElements.push(elements[i]);
+    }
+  }
+
+  filteredElements.forEach((element) => createMarker(element));
 };
 
 export {filterMapMarkers};
