@@ -1,10 +1,11 @@
-import { activateForms, advertisementForm, filtersForm, setFilterChange, setFormResetClick, setFormSubmit } from './form.js';
+import { activateForm, advertisementForm, filtersForm, setFilterChange, setFormResetClick, setFormSubmit } from './form.js';
 import { renderSimilarAdvertisement } from './similar-list.js';
 import { getData } from './api.js';
 import { showAlert } from './util.js';
-import { addressInput } from './user-form.js';
-import { filterMapMarkers } from './map-filter.js';
+import { setAddressInput, setEventListenerInputs } from './user-form.js';
+import { getFilteredAds } from './map-filter.js';
 import { debounce } from './utils/debounce.js';
+
 
 const coordinateTokyo = {
   lat: '35.68950',
@@ -29,12 +30,16 @@ const icon = L.icon({
   iconAncor: [20, 40],
 });
 
-const currentCoordinate = (evt) => evt.target.getLatLng();
+// Функция получения текущих координат главной метки
+const getCurrentCoordinateMainMarker = (evt) => evt.target.getLatLng();
 
-const setValueAddressInput = (evt) => {
-  addressInput.value = `${currentCoordinate(evt).lat.toFixed(5)}, ${currentCoordinate(evt).lng.toFixed(5)}`;
+// Обработчик передвижения главного маркера
+const onMoveMainMarker = (evt) => {
+  const currentCoordinateMainMarker = getCurrentCoordinateMainMarker(evt);
+  setAddressInput(`${currentCoordinateMainMarker.lat.toFixed(5)}, ${currentCoordinateMainMarker.lng.toFixed(5)}`);
 };
 
+// Функция создания маркера
 const createMarker = (element) => {
 
   const marker = L.marker(element.location, icon)
@@ -50,6 +55,7 @@ const mainMarker = L.marker(coordinateTokyo,
   },
 );
 
+// Функция для получения массива выбранных особенностей
 const getValueCheckboxFeatures = () => {
   const housingFeatures = filtersContainer.querySelectorAll('.map__checkbox');
   const features = [];
@@ -62,6 +68,7 @@ const getValueCheckboxFeatures = () => {
   return features;
 };
 
+// Функция отрисовки маркеров
 const renderMarkers = (elements) => {
   const housingType = filtersContainer.querySelector('#housing-type');
   const housingPrice = filtersContainer.querySelector('#housing-price');
@@ -70,13 +77,17 @@ const renderMarkers = (elements) => {
 
   layerGroup.clearLayers();
 
-  filterMapMarkers(elements, housingType.value, housingPrice.value, housingRooms.value, housingGuests.value, getValueCheckboxFeatures());
+  const filteredAds = getFilteredAds(elements, housingType.value, housingPrice.value, housingRooms.value, housingGuests.value, getValueCheckboxFeatures());
 
-  activateForms(filtersForm);
+  filteredAds.forEach((element) => createMarker(element));
+
+  activateForm(filtersForm);
 };
 
+// Обработчик загрузки карты
 const onMapLoad = () => {
-  activateForms(advertisementForm);
+  activateForm(advertisementForm);
+  setEventListenerInputs();
 
   getData((items) => {
     renderMarkers(items),
@@ -90,6 +101,7 @@ const onMapLoad = () => {
   );
 };
 
+// Функция создания карты
 const createMap = () => {
   map
     .on('load', () => {
@@ -107,9 +119,9 @@ const createMap = () => {
   layerGroup.addTo(map);
 
   mainMarker.addTo(map);
-  mainMarker.on('move', setValueAddressInput);
+  mainMarker.on('move', onMoveMainMarker);
 
-  addressInput.value = `${coordinateTokyo.lat}, ${coordinateTokyo.lng}`;
+  setAddressInput(`${coordinateTokyo.lat}, ${coordinateTokyo.lng}`);
 };
 
 export {map, mainMarker, coordinateTokyo, createMap, createMarker, onMapLoad };

@@ -5,27 +5,28 @@ import { showMessage } from './user-modal.js';
 const advertisementForm = document.querySelector('.ad-form');
 const filtersForm = document.querySelector('.map__filters');
 
-// Функция смены состояния форм (активация, деактивация)
-const switchFormState = (isDisabled, ...forms) => {
-  forms.forEach((form) => {
-    const classNameForm = form.className;
-    form.classList.remove(classNameForm);
+// Функция смены состояния формы (активация, деактивация)
+const switchFormState = (isDisabled, form) => {
+  const classNameForm = form.className;
+  form.classList.remove(classNameForm);
 
-    if (isDisabled) {
-      form.classList.add(`${classNameForm}--disabled`);
-    } else {
-      form.classList.add(classNameForm.replace('--disabled',''));
-    }
+  if (isDisabled) {
+    form.classList.add(`${classNameForm}--disabled`);
+  } else {
+    form.classList.add(classNameForm.replace('--disabled',''));
+  }
 
-    form.childNodes.forEach((element) => element.disabled = isDisabled);
-  });
+  form.childNodes.forEach((element) => element.disabled = isDisabled);
 };
 
-// Функция деактивация форм
-const disableForms = () => switchFormState(true, advertisementForm, filtersForm);
+// Функция деактивации форм
+const disableForms = () => {
+  switchFormState(true, advertisementForm);
+  switchFormState(true, filtersForm);
+};
 
-// Функция активация форм
-const activateForms = (...forms) => switchFormState(false, ...forms);
+// Функция активация формы
+const activateForm = (form) => switchFormState(false, form);
 
 // Функция возвращения страницы в начальное состояние
 const initialStateForm = () => {
@@ -70,4 +71,4 @@ const setFilterChange = (callback) => {
   });
 };
 
-export{activateForms, disableForms, advertisementForm, filtersForm, setFilterChange, setFormResetClick, setFormSubmit};
+export{activateForm, disableForms, advertisementForm, filtersForm, setFilterChange, setFormResetClick, setFormSubmit};

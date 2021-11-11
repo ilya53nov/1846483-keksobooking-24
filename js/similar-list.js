@@ -1,15 +1,9 @@
-import {getDeclension} from './util.js';
+import { getDeclension } from './util.js';
+import { types } from './data.js';
 
 const HIDDEN_CLASS = 'hidden';
 
-const TYPES = {
-  flat: 'Квартира',
-  bungalow: 'Бунгало',
-  house: 'Дом',
-  palace: 'Дворец',
-  hotel: 'Отель',
-};
-
+// Функция проверки значения на пустоту, если значение пусто, то скрыть элемент, если значение не пустое то вставить в элемент значение
 const checkValueAndAddTextContentOrClassHidden = (element, checkValue, insertValue) => {
   if (checkValue) {
     element.textContent = insertValue;
@@ -22,66 +16,75 @@ const similarAdvertisementTemlate = document.querySelector('#card')
   .content
   .querySelector('.popup');
 
+// Функция отрисовки похожего объявления
 const renderSimilarAdvertisement = (({offer, author}) => {
   const advertisementElement = similarAdvertisementTemlate.cloneNode(true);
+  const popupPrice = advertisementElement.querySelector('.popup__text--price');
+  const popupCapacity = advertisementElement.querySelector('.popup__text--capacity');
+  const popupFeatures = advertisementElement.querySelector('.popup__features');
+  const popupPhotos = advertisementElement.querySelector('.popup__photos');
+  const popupAvatar = advertisementElement.querySelector('.popup__avatar');
+  const popupTitle = advertisementElement.querySelector('.popup__title');
+  const popupAddress = advertisementElement.querySelector('.popup__text--address');
+  const popupType = advertisementElement.querySelector('.popup__type');
+  const popupTime = advertisementElement.querySelector('.popup__text--time');
+  const popupDescription = advertisementElement.querySelector('.popup__description');
 
-  checkValueAndAddTextContentOrClassHidden(advertisementElement.querySelector('.popup__title'), offer.title, offer.title);
-  checkValueAndAddTextContentOrClassHidden(advertisementElement.querySelector('.popup__text--address'), offer.address, offer.address);
-  checkValueAndAddTextContentOrClassHidden(advertisementElement.querySelector('.popup__type'), offer.type, TYPES[offer.type]);
-  checkValueAndAddTextContentOrClassHidden(advertisementElement.querySelector('.popup__text--time'), offer.checkin && offer.checkout, `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`);
-  checkValueAndAddTextContentOrClassHidden(advertisementElement.querySelector('.popup__description'), offer.description, offer.description);
+  checkValueAndAddTextContentOrClassHidden(popupTitle, offer.title, offer.title);
+  checkValueAndAddTextContentOrClassHidden(popupAddress, offer.address, offer.address);
+  checkValueAndAddTextContentOrClassHidden(popupType, offer.type, types[offer.type].rusLocalization);
+  checkValueAndAddTextContentOrClassHidden(popupTime, offer.checkin && offer.checkout, `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`);
+  checkValueAndAddTextContentOrClassHidden(popupDescription, offer.description, offer.description);
 
   if (offer.price) {
-    advertisementElement.querySelector('.popup__text--price').textContent = offer.price;
+    popupPrice.textContent = offer.price;
     const spanElement = document.createElement('span');
     spanElement.textContent = ' ₽/ночь';
-    advertisementElement.querySelector('.popup__text--price').appendChild(spanElement);
+    popupPrice.appendChild(spanElement);
   } else {
-    advertisementElement.querySelector('.popup__text--price').classList.add(HIDDEN_CLASS);
+    popupPrice.classList.add(HIDDEN_CLASS);
   }
 
   if (offer.rooms && offer.guests) {
     const rooms = getDeclension(['комната', 'комнаты', 'комнат'], offer.rooms);
     const guests = getDeclension(['гостя', 'гостей', 'гостей'], offer.guests);
-    advertisementElement.querySelector('.popup__text--capacity').textContent = `${rooms} для ${guests}`;
+    popupCapacity.textContent = `${rooms} для ${guests}`;
   } else {
-    advertisementElement.querySelector('.popup__text--capacity').classList.add(HIDDEN_CLASS);
+    popupCapacity.classList.add(HIDDEN_CLASS);
   }
 
   if (offer.features) {
-    const featuresContainer = advertisementElement.querySelector('.popup__features');
-    featuresContainer.innerHTML = '';
+    popupFeatures.innerHTML = '';
 
     offer.features.forEach((element) => {
       const createElementFeatures = document.createElement('li');
-      createElementFeatures.classList.add('popup__feature');
-      createElementFeatures.classList.add(`popup__feature--${element}`);
-      featuresContainer.appendChild(createElementFeatures);
+      createElementFeatures.className = `popup__feature popup__feature--${element}`;
+
+      popupFeatures.appendChild(createElementFeatures);
     });
   } else {
-    advertisementElement.querySelector('.popup__features').classList.add(HIDDEN_CLASS);
+    popupFeatures.classList.add(HIDDEN_CLASS);
   }
 
   if (offer.photos) {
-    const photoContainer = advertisementElement.querySelector('.popup__photos');
     const photoListFragment = document.createDocumentFragment();
 
     offer.photos.forEach((photoItem) => {
-      const photoElement = photoContainer.querySelector('.popup__photo').cloneNode(true);
+      const photoElement = popupPhotos.querySelector('.popup__photo').cloneNode(true);
       photoElement.src = photoItem;
       photoListFragment.appendChild(photoElement);
     });
 
-    photoContainer.innerHTML ='';
-    photoContainer.appendChild(photoListFragment);
+    popupPhotos.innerHTML ='';
+    popupPhotos.appendChild(photoListFragment);
   } else {
-    advertisementElement.querySelector('.popup__photos').classList.add(HIDDEN_CLASS);
+    popupPhotos.classList.add(HIDDEN_CLASS);
   }
 
   if (author.avatar) {
-    advertisementElement.querySelector('.popup__avatar').src = author.avatar;
+    popupAvatar.src = author.avatar;
   } else {
-    advertisementElement.querySelector('.popup__avatar').classList.add(HIDDEN_CLASS);
+    popupAvatar.classList.add(HIDDEN_CLASS);
   }
 
   return advertisementElement;

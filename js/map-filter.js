@@ -1,18 +1,17 @@
-import { createMarker } from './map.js';
 const ADS_COUNT = 10;
 
 const rulesPriceFilter = {
-  'middle' : {
-    'min' : 10000,
-    'max' : 50000,
+  middle : {
+    min : 10000,
+    max : 50000,
   },
-  'low' : {
-    'min' : 0,
-    'max' : 10000 - 1,
+  low : {
+    min : 0,
+    max : 10000 - 1,
   },
-  'high' : {
-    'min' : 50000 + 1,
-    'max' : Infinity,
+  high : {
+    min : 50000 + 1,
+    max : Infinity,
   },
 };
 
@@ -24,6 +23,7 @@ const isEqualElementToValue = (element, value) => isAny(value) || element.toStri
 
 const isFilterFeatures = (features, filterFeatures) => features && filterFeatures.every((feature) => features.some((featureValue) => feature === featureValue));
 
+// Функция сортировки массива по количеству особенностей
 const sortFeature = (elements) => {
   elements.sort((current, next) => {
     let currentValue = 0;
@@ -39,7 +39,8 @@ const sortFeature = (elements) => {
   });
 };
 
-const filterMapMarkers = (elements, typeValue, priceValue, roomsValue, guestsValue, features) => {
+// Функция получения отфильтрованного массива
+const getFilteredAds = (elements, typeValue, priceValue, roomsValue, guestsValue, features) => {
   sortFeature(elements);
 
   const filteredElements = [];
@@ -52,7 +53,7 @@ const filterMapMarkers = (elements, typeValue, priceValue, roomsValue, guestsVal
     }
   }
 
-  filteredElements.forEach((element) => createMarker(element));
+  return filteredElements;
 };
 
-export {filterMapMarkers};
+export {getFilteredAds};
