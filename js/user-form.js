@@ -52,8 +52,9 @@ const isValidCapacityInput = () => rulesCapacityInput[roomInput.value].values.so
 
 // Функция для установки минимальной цены
 const setMinValuePriceInput = () => {
-  priceInput.min = getMinPrice(typeInput.value);
-  priceInput.placeholder = getMinPrice(typeInput.value);
+  const minPrice = getMinPrice(typeInput.value);
+  priceInput.min = minPrice;
+  priceInput.placeholder = minPrice;
 };
 
 // Обработчик для поля 'заголовок объявления'
@@ -127,4 +128,4 @@ const setEventListenerInputs = () => {
   onCapacityInputChange();
 };
 
-export {setAddressInput, setEventListenerInputs};
+export {setAddressInput, setEventListenerInputs, setMinValuePriceInput, onCapacityInputChange};

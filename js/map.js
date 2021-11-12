@@ -80,8 +80,6 @@ const renderMarkers = (elements) => {
   const filteredAds = getFilteredAds(elements, housingType.value, housingPrice.value, housingRooms.value, housingGuests.value, getValueCheckboxFeatures());
 
   filteredAds.forEach((element) => createMarker(element));
-
-  activateForm(filtersForm);
 };
 
 // Обработчик загрузки карты
@@ -90,6 +88,7 @@ const onMapLoad = () => {
   setEventListenerInputs();
 
   getData((items) => {
+    activateForm(filtersForm),
     renderMarkers(items),
     setFormSubmit( () => renderMarkers(items)),
     setFormResetClick( () => renderMarkers(items)),

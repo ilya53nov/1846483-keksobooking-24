@@ -1,6 +1,7 @@
 import { map, mainMarker, coordinateTokyo } from './map.js';
 import { sendData } from './api.js';
 import { showMessage } from './user-modal.js';
+import { setMinValuePriceInput, onCapacityInputChange } from './user-form.js';
 
 const advertisementForm = document.querySelector('.ad-form');
 const filtersForm = document.querySelector('.map__filters');
@@ -34,6 +35,8 @@ const initialStateForm = () => {
   filtersForm.reset();
   mainMarker.setLatLng(coordinateTokyo);
   map.closePopup();
+  setMinValuePriceInput();
+  onCapacityInputChange();
 };
 
 // Функция установки параметров для формы при нажатии на кнопку reset(очистки формы)
