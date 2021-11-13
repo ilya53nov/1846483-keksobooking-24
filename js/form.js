@@ -6,6 +6,9 @@ import { setMinValuePriceInput, onCapacityInputChange } from './user-form.js';
 const advertisementForm = document.querySelector('.ad-form');
 const filtersForm = document.querySelector('.map__filters');
 
+// Функция смены состояния элемента
+const setDisabled = (element, isDisabled) => element.disabled = isDisabled;
+
 // Функция смены состояния формы (активация, деактивация)
 const switchFormState = (isDisabled, form) => {
   const classNameForm = form.className;
@@ -17,7 +20,7 @@ const switchFormState = (isDisabled, form) => {
     form.classList.add(classNameForm.replace('--disabled',''));
   }
 
-  form.childNodes.forEach((element) => element.disabled = isDisabled);
+  form.childNodes.forEach((element) => setDisabled(element, isDisabled));
 };
 
 // Функция деактивации форм
