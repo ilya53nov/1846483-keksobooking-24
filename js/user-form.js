@@ -10,19 +10,19 @@ const MESSAGE_ERROR_CAPACITY_INPUT = 'Не верно указано колич�
 const rulesCapacityInput = {
   1: {
     values: [1],
-    messageError: function() { return `${MESSAGE_ERROR_CAPACITY_INPUT} для ${this.values.join()} гостя.`; },
+    getMessageError: function() { return `${MESSAGE_ERROR_CAPACITY_INPUT} для ${this.values.join()} гостя.`; },
   },
   2: {
     values: [1, 2],
-    messageError: function() { return `${MESSAGE_ERROR_CAPACITY_INPUT} для ${this.values.join(' или ')} гостей.`; },
+    getMessageError: function() { return `${MESSAGE_ERROR_CAPACITY_INPUT} для ${this.values.join(' или ')} гостей.`; },
   },
   3: {
     values: [1, 2, 3],
-    messageError: function() { return `${MESSAGE_ERROR_CAPACITY_INPUT} для ${this.values.join(' или ')} гостей.`; },
+    getMessageError: function() { return `${MESSAGE_ERROR_CAPACITY_INPUT} для ${this.values.join(' или ')} гостей.`; },
   },
   100: {
     values: [0],
-    messageError: function() { return `${MESSAGE_ERROR_CAPACITY_INPUT} не для гостей.`; },
+    getMessageError: function() { return `${MESSAGE_ERROR_CAPACITY_INPUT} не для гостей.`; },
   },
 };
 
@@ -58,7 +58,7 @@ const setMinValuePriceInput = () => {
 };
 
 // Обработчик для поля 'заголовок объявления'
-function onTitleInputChange() {
+const onTitleInputChange = () => {
   const valueLength = titleInput.value.length;
 
   if (valueLength < MIN_TITLE_LENGTH) {
@@ -70,10 +70,10 @@ function onTitleInputChange() {
   }
 
   titleInput.reportValidity();
-}
+};
 
 // Обработчик для поля 'цена за ночь'
-function onPriceInputChange () {
+const onPriceInputChange = () => {
   const value = priceInput.value;
   const minValue = getMinPrice(typeInput.value);
 
@@ -86,34 +86,34 @@ function onPriceInputChange () {
   }
 
   priceInput.reportValidity();
-}
+};
 
 // Обработчик для поля 'количество мест'
-function onCapacityInputChange () {
+const onCapacityInputChange = () => {
   if (!isValidCapacityInput()) {
-    capacityInput.setCustomValidity(rulesCapacityInput[roomInput.value].messageError());
+    capacityInput.setCustomValidity(rulesCapacityInput[roomInput.value].getMessageError());
   } else {
     capacityInput.setCustomValidity('');
   }
 
   capacityInput.reportValidity();
-}
+};
 
 // Обработчик для поля 'тип жилья'
-function onTypeInputChange () {
+const onTypeInputChange = () => {
   setMinValuePriceInput();
   onPriceInputChange();
-}
+};
 
 // Обработчик для поля 'время заезда'
-function onTimeInInputChange() {
+const onTimeInInputChange = () => {
   timeOutInput.value = timeInInput.value;
-}
+};
 
 // Обработчик для поля 'время выезда'
-function onTimeOutInputChange() {
+const onTimeOutInputChange = () => {
   timeInInput.value = timeOutInput.value;
-}
+};
 
 // Функция добавления слушателей на поля
 const setEventListenerInputs = () => {
