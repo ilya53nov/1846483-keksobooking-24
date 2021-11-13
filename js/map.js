@@ -4,7 +4,7 @@ import { getData } from './api.js';
 import { showAlert } from './util.js';
 import { setAddressInput, setEventListenerInputs } from './user-form.js';
 import { getFilteredAds } from './map-filter.js';
-import { debounce } from './utils/debounce.js';
+import { debounce } from './util.js';
 
 
 const coordinateTokyo = {
@@ -15,7 +15,6 @@ const coordinateTokyo = {
 const mapCanvas = document.querySelector('#map-canvas');
 const filtersContainer = document.querySelector('.map__filters');
 const map = L.map(mapCanvas);
-
 const layerGroup = L.layerGroup();
 
 const mainPinIcon = L.icon({
