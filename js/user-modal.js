@@ -1,20 +1,20 @@
 import { isEscapeKey } from './util.js';
 
-const successMessageTemlate = document.querySelector('#success')
+const successMessageTemplate = document.querySelector('#success')
   .content
   .querySelector('.success');
 
-const errorMessageTemlate = document.querySelector('#error')
+const errorMessageTemplate = document.querySelector('#error')
   .content
   .querySelector('.error');
 
-const successMessage = successMessageTemlate.cloneNode(true);
+const successMessage = successMessageTemplate.cloneNode(true);
 
-const errorMessage = errorMessageTemlate.cloneNode(true);
+const errorMessage = errorMessageTemplate.cloneNode(true);
 const errorButton = errorMessage.querySelector('.error__button');
 
 // Событие при клике
-const onMessageClick = () =>{
+const onMessageClick = () => {
   closeMessage();
 };
 
